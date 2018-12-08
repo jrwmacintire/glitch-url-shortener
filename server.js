@@ -14,7 +14,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 /** this project needs a db !! **/ 
-// mongoose.connect(process.env.MONGOLAB_URI);
+mongoose.connect(process.env.MONGO_URI, () => {
+  console.log('Connected to database!');
+});
 
 app.use(cors());
 
@@ -32,12 +34,6 @@ app.get('/', (req, res) => {
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
-  
-// your first API endpoint... 
-app.get("/api/hello", (req, res) => {
-  res.json({greeting: 'hello API'});
-});
-
 // @route POST '/api/shorturl/new'
 // @desc Create a new shorturl using the POST request's query
 app.post('/api/shorturl/new',(req, res) => {
@@ -47,7 +43,10 @@ app.post('/api/shorturl/new',(req, res) => {
 });
 
 // @route GET '/api/shorturl/:shortUrl'
-// @desc 
+// @desc Redirects to the original URL associated with the current short URL
+app.get('/api/shorturl/:shortUrl', (req, res) => {
+  console.log(`Redirecting from '${req.params.shortUrl}' to ...`);
+});
 
 
 app.listen(port, () => {
