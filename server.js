@@ -42,7 +42,7 @@ app.get("/api/hello", (req, res) => {
 app.post('/api/shorturl/new',(req, res) => {
   let body = req.body;
   
-  res.send(body);
+  res.send(body.url);
 });
 
 
