@@ -13,7 +13,8 @@
     "cors": "^2.8.5",
     "body-parser": "^1.18.3",
     "mocha": "^5.2.0",
-    "shortid": "^2.2.14"
+    "shortid": "^2.2.14",
+    "dns": "^0.2.2"
   },
   "engines": {
     "node": "4.4.5"
