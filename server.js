@@ -38,8 +38,10 @@ app.get('/', (req, res) => {
 // @desc Create a new shorturl using the POST request's query
 app.post('/api/shorturl/new',(req, res) => {
   let body = req.body;
-  
-  res.send(body.url);
+  res.send(body);
+  // read URL from 'body'
+  // check if URL is valid using 'dns' module
+  // if invalid, respond with error message
 });
 
 // @route GET '/api/shorturl/:shortUrl'
