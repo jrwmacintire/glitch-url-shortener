@@ -5,6 +5,7 @@ const mongo = require('mongodb');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const url = require('url');
 const querystring = require('querystring');
 
 const app = express();
@@ -44,6 +45,9 @@ app.post('/api/shorturl/new',(req, res) => {
   
   res.send(body.url);
 });
+
+// @route GET '/api/shorturl/:shortUrl'
+// @desc 
 
 
 app.listen(port, () => {
