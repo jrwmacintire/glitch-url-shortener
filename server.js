@@ -38,7 +38,7 @@ app.get("/api/hello", (req, res) => {
 
 // @route POST '/api/shorturl/new'
 // @desc Create a new shorturl using the POST request's query
-app.post('/api/shorturl/new',(req, res) => {
+app.post('/api/shorturl/new?url',(req, res) => {
   
 });
 
