@@ -5,6 +5,7 @@ const mongo = require('mongodb');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const querystring = require('querystring');
 
 const app = express();
 
@@ -21,8 +22,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(express.json());
-app.use(express.urlencoded());
+// app.use(express.json());
+// app.use(express.urlencoded());
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
@@ -39,7 +40,9 @@ app.get("/api/hello", (req, res) => {
 // @route POST '/api/shorturl/new'
 // @desc Create a new shorturl using the POST request's query
 app.post('/api/shorturl/new',(req, res) => {
-  // res.send(req.params.url);
+  let body = req.body;
+  
+  res.send(body);
 });
 
 

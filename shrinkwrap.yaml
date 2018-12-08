@@ -6,6 +6,7 @@ dependencies:
   mocha: 5.2.0
   mongodb: 3.1.10
   mongoose: 5.3.15
+  querystring: 0.2.0
   shortid: 2.2.14
 packages:
   /accepts/1.0.7:
@@ -1115,6 +1116,12 @@ packages:
       node: '>=0.6'
     resolution:
       integrity: sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
+  /querystring/0.2.0:
+    dev: false
+    engines:
+      node: '>=0.4.x'
+    resolution:
+      integrity: sha1-sgmEkgO7Jd+CDadW50cAWHhSFiA=
   /range-parser/1.0.0:
     dev: false
     resolution:
@@ -1521,6 +1528,7 @@ packages:
       node: '>=0.4.0'
     name: xmlhttprequest
     resolution:
+      registry: 'https://registry.npmjs.org/'
       tarball: 'https://github.com/LearnBoost/node-XMLHttpRequest/archive/0f36d0b5ebc03d85f860d42a64ae9791e1daa433.tar.gz'
     version: 1.5.0
   github.com/component/emitter/archive/1.0.1.tar.gz:
@@ -1529,12 +1537,14 @@ packages:
     dev: false
     name: emitter
     resolution:
+      registry: 'https://registry.npmjs.org/'
       tarball: 'http://github.com/component/emitter/archive/1.0.1.tar.gz'
     version: 1.0.1
   github.com/component/global/archive/v2.0.1.tar.gz:
     dev: false
     name: global
     resolution:
+      registry: 'https://registry.npmjs.org/'
       tarball: 'https://github.com/component/global/archive/v2.0.1.tar.gz'
     version: 2.0.1
 registry: 'https://registry.npmjs.org/'
@@ -1548,4 +1558,5 @@ specifiers:
   mocha: ^5.2.0
   mongodb: ^3.1.10
   mongoose: ^5.3.15
+  querystring: ^0.2.0
   shortid: ^2.2.14

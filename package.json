@@ -14,7 +14,8 @@
     "body-parser": "^1.18.3",
     "mocha": "^5.2.0",
     "shortid": "^2.2.14",
-    "dns": "^0.2.2"
+    "dns": "^0.2.2",
+    "querystring": "^0.2.0"
   },
   "engines": {
     "node": "4.4.5"
