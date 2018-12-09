@@ -44,8 +44,8 @@ app.post('/api/shorturl/new',(req, res) => {
   const originalUrl = body.url;
   console.log(`originalUrl: ${originalUrl}`);
   
-  const urlRegExp = /^(https*:\/\/)(\w*)$/;
-  console.log(originalUrl.replace(urlRegExp, '$1 $2'));
+  const urlRegExp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+  console.log(originalUrl.match(urlRegExp));
   
   const dnsLookup = dns.lookup(originalUrl, (err, address, family) => {
     if(err) {
