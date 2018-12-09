@@ -30,9 +30,6 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// app.use(express.json());
-// app.use(express.urlencoded());
-
 app.use('/public', express.static(process.cwd() + '/public'));
 
 app.get('/', (req, res) => {
@@ -57,7 +54,18 @@ app.post('/api/shorturl/new',(req, res) => {
             updatedAt = new Date();
       
       try {
-        const url = await UrlObject.findOne({ originalUrl: originalUrl });
+        const url = await UrlObject.findOne({ originalUrl: url });
+        if(url) {
+          res.status(200).send({ message: 'Found in DB!' });
+        } else {
+          const item = new UrlObject({
+            url,
+            shortUrl,
+            shortCode,
+            createdAt,
+            updatedAt
+          });
+        }
       } catch(err) {
          res.status(400).send({ error: 'Error finding object in database.' }); 
       }
