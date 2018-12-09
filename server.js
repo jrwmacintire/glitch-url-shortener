@@ -19,6 +19,7 @@ const port = process.env.PORT || 3000;
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }, () => {
   console.log('Connected to database!');
 });
+mongoose.Promise = global.Promise;
 
 app.use(cors());
 
@@ -40,10 +41,15 @@ app.get('/', (req, res) => {
 // @desc Create a new shorturl using the POST request's query
 app.post('/api/shorturl/new',(req, res) => {
   let body = req.body;
-  res.send(body);
+  // res.send(body);
   const url = body.url;
-  const validUrl = dns.lookup(url, function(err, address, family) {
-    console.log(address);
+  dns.lookup(url, function(err, address, family) {
+    if(err) {
+      res.status(400).json({ error: 'Invalid URL' });
+    } else {
+      console.log(`address: ${address}`);
+      
+    }
   });
 });
 
