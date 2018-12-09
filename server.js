@@ -44,12 +44,15 @@ app.post('/api/shorturl/new',(req, res) => {
   const originalUrl = body.url;
   console.log(`originalUrl: ${originalUrl}`);
   const dnsLookup = dns.lookup(originalUrl, (err, address, family) => {
-    if(err) res.status(401).send(err);
-    console.log('Valid URL?');
-    res.status(200).json({
-      originalUrl: originalUrl,
-      shortUrl: 'something short'
-    });
+    if(err) {
+      res.status(401).send({ error: 'Invalid URL format.' });
+    } else {
+      console.log('Valid URL?');
+      res.status(200).json({
+        originalUrl: originalUrl,
+        shortUrl: 'something short'
+      });
+    }
   });
   console.log(`dnsLookup: `, dnsLookup);
 });
