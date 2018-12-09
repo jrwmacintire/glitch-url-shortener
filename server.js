@@ -12,6 +12,7 @@ const querystring = require('querystring');
 const shortid = require('shortid');
 const dns = require('dns');
 const extractHostname = require('./lib/extractHostname');
+const checkDatabase = require('./lib/checkDatabase');
 
 const app = express();
 
@@ -52,7 +53,7 @@ app.post('/api/shorturl/new', (req, res) => {
         res.status(401).send({ error: '(dns.lookup) Invalid hostname format.' });
       } else {
         console.log('Valid hostname');
-        
+        checkDatabase(originalUrl);
         res.status(200).json({
           originalUrl: originalUrl,
           shortUrl: 'something short'
