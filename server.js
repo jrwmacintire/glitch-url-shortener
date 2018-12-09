@@ -46,18 +46,22 @@ app.post('/api/shorturl/new', (req, res) => {
   const hostname = extractHostname(originalUrl);
   // console.log(`hostname: ${hostname}`);
   
-  const dnsLookup = dns.lookup(hostname, (err, address, family) => {
-    if(err) {
-      res.status(401).send({ error: 'Invalid hostname format.' });
-    } else {
-      console.log('Valid hostname');
-      
-      res.status(200).json({
-        originalUrl: originalUrl,
-        shortUrl: 'something short'
-      });
-    }
-  });
+  try {
+    const dnsLookup = dns.lookup(hostname, (err, address, family) => {
+      if(err) {
+        res.status(401).send({ error: '(dns.lookup) Invalid hostname format.' });
+      } else {
+        console.log('Valid hostname');
+        
+        res.status(200).json({
+          originalUrl: originalUrl,
+          shortUrl: 'something short'
+        });
+      }
+    });
+  } catch(err) {
+    res.status(401).send({ error: 'Invalid URL format.' });
+  }
   // console.log(`dnsLookup: `, dnsLookup);
 });
 
@@ -73,3 +77,5 @@ app.get('/api/shorturl/:shortUrl', (req, res) => {
 app.listen(port, () => {
   console.log('URL Shortener is listening ...');
 });
+
+module.exports = app;
