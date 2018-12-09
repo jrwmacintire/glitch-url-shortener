@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const UrlSchema = mongoose.Schema({
+const urlSchema = mongoose.Schema({
   originalUrl: String,
   shortUrl: String,
   shortCode: String,
@@ -7,6 +7,6 @@ const UrlSchema = mongoose.Schema({
   updatedAt: { type: Date, date: Date.now }
 });
 
-mongoose.model('UrlObject', UrlSchema);
+const UrlObject = mongoose.model('UrlObject', urlSchema);
 
-module.exports = UrlSchema;
+module.exports = UrlObject;
