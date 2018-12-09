@@ -7,6 +7,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const url = require('url');
 const querystring = require('querystring');
+const shortid = require('shortid');
+const dns = require('dns');
 
 const app = express();
 
@@ -14,7 +16,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 /** this project needs a db !! **/ 
-mongoose.connect(process.env.MONGO_URI, () => {
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }, () => {
   console.log('Connected to database!');
 });
 
@@ -39,9 +41,10 @@ app.get('/', (req, res) => {
 app.post('/api/shorturl/new',(req, res) => {
   let body = req.body;
   res.send(body);
-  // read URL from 'body'
-  // check if URL is valid using 'dns' module
-  // if invalid, respond with error message
+  const url = body.url;
+  const validUrl = dns.lookup(url, function(err, address, family) {
+    console.log(address);
+  });
 });
 
 // @route GET '/api/shorturl/:shortUrl'
