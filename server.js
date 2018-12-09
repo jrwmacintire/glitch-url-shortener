@@ -57,7 +57,13 @@ app.post('/api/shorturl/new', async (req, res) => {
   
   try {
     
-    const url = await UrlObject.findOne({ originalUrl: originalUrl });
+    let shortUrl = shortCode;
+    const url = await UrlObject.findOne({ originalUrl: originalUrl }, (err, obj) => {
+      if(err) res.status(401).send(err);
+      // If the object already exists, add object's shortCode
+      // if(obj.shortCode) shortUrl = obj.shortCode;
+      console.log(shortUrl);
+    });
     
     const item = new UrlObject({
       originalUrl,
@@ -72,12 +78,10 @@ app.post('/api/shorturl/new', async (req, res) => {
       await item.save();
     }
     
-    const responseData = {
+    return res.status(200).send({
       originalUrl: originalUrl,
-      shortUrl: shortCode
-    };
-    
-    return res.status(200).send(responseData);
+      shortUrl: shortUrl
+    });
     
   } catch (err) {
     return res.status(401).send({ error: 'Error finding item in DB.' });
