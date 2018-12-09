@@ -53,29 +53,34 @@ app.post('/api/shorturl/new',(req, res) => {
             createdAt = new Date(),
             updatedAt = new Date();
       
-      const urlObject = await UrlObject.findOne({ originalUrl: url });
-      if(urlObject) {
-        res.status(200).send({ message: 'Found in DB!' });
-      } else {
-        const item = new UrlObject({
-          url,
-          shortUrl,
-          shortCode,
-          createdAt,
-          updatedAt
-        });
-        
-        const response = {
-          'originalUrl': url,
-          'shortUrl': shortCode
-        };
-        
-        console.log('Saving item to DB.');
-        await item.save();
-        
-        console.log('Response is being sent.');
-        await res.status(200).send(response);
-        
+      
+      try {
+        const urlObject = await UrlObject.findOne({ originalUrl: url });
+        if(urlObject) {
+          res.status(200).send({ message: 'Found in DB!' });
+        } else {
+          const item = new UrlObject({
+            url,
+            shortUrl,
+            shortCode,
+            createdAt,
+            updatedAt
+          });
+          
+          const response = {
+            'originalUrl': url,
+            'shortUrl': shortCode
+          };
+          
+          console.log('Saving item to DB.');
+          await item.save();
+          
+          console.log('Response is being sent.');
+          await res.status(200).send(response);
+          
+        }
+      } catch(err) {
+        if(err) res.status(400).send({ error: 'Error with database.' });
       }
     }
   });
