@@ -53,7 +53,7 @@ app.post('/api/shorturl/new', (req, res) => {
         res.status(401).send({ error: '(dns.lookup) Invalid hostname format.' });
       } else {
         console.log('Valid hostname');
-        checkDatabase(originalUrl);
+        
         res.status(200).json({
           originalUrl: originalUrl,
           shortUrl: 'something short'
