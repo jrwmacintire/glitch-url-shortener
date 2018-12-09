@@ -42,48 +42,16 @@ app.post('/api/shorturl/new',(req, res) => {
   let body = req.body;
   // res.send(body);
   const originalUrl = body.url;
-  dns.lookup(url, async function(err, address, family) {
-    if(err) {
-      res.status(400).json({ error: 'Invalid URL' });
-    } else {
-      console.log(`address: ${address}`);
-      const shortCode = shortid.generate(),
-            baseUrl = 'https://jrwm3-url-shortener.glitch.me/api/shorturl/',
-            shortUrl = baseUrl + shortCode,
-            createdAt = new Date(),
-            updatedAt = new Date();
-      
-      
-      try {
-        const url = await UrlObject.findOne({ originalUrl: originalUrl });
-        if(url) {
-          res.status(200).send({ message: 'Found in DB!' });
-        } else {
-          const item = new UrlObject({
-            originalUrl,
-            shortUrl,
-            shortCode,
-            createdAt,
-            updatedAt
-          });
-          
-          const response = {
-            'originalUrl': originalUrl,
-            'shortUrl': shortCode
-          };
-          
-          console.log('Saving item to DB.');
-          await item.save();
-          
-          console.log('Response is being sent.');
-          await res.status(200).send(response);
-          
-        }
-      } catch(err) {
-        if(err) res.status(400).send({ error: 'Error with database.' });
-      }
-    }
+  console.log(`originalUrl: ${originalUrl}`);
+  const dnsLookup = dns.lookup(originalUrl, (err, address, family) => {
+    if(err) res.status(401).send(err);
+    console.log('Valid URL?');
+    res.status(200).json({
+      originalUrl: originalUrl,
+      shortUrl: 'something short'
+    });
   });
+  console.log(`dnsLookup: `, dnsLookup);
 });
 
 // @route GET '/api/shorturl/:shortUrl'
