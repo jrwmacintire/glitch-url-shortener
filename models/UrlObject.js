@@ -7,6 +7,6 @@ const urlSchema = mongoose.Schema({
   updatedAt: { type: Date, date: Date.now }
 });
 
-const UrlObject = mongoose.model('UrlObject', urlSchema);
+mongoose.model('UrlObject', urlSchema);
 
-module.exports = UrlObject;
+module.exports = urlSchema;
