@@ -12,7 +12,6 @@ const querystring = require('querystring');
 const shortid = require('shortid');
 const dns = require('dns');
 const extractHostname = require('./lib/extractHostname');
-const checkDatabase = require('./lib/checkDatabase');
 
 const app = express();
 
@@ -53,11 +52,38 @@ app.post('/api/shorturl/new', (req, res) => {
         res.status(401).send({ error: '(dns.lookup) Invalid hostname format.' });
       } else {
         console.log('Valid hostname');
-        
-        const exists = await checkDatabase(originalUrl);
-        console.log('exists: ', exists);
-        
-        res.status(200).send(exists);
+        try {
+          const url = await UrlObject.findOne({ originalUrl: originalUrl });
+
+          if(url) {
+            return res.status(200).send({ message: 'Item in DB!' });
+          } else {
+            const createdAt = new Date(),
+                  baseUrl = 'https://jrwm3-url-shortener.glitch.me/api/shorturl/',
+                  shortCode = shortid.generate(),
+                  shortUrl = baseUrl + shortCode,
+                  updatedAt = new Date();
+
+            const item = new UrlObject({
+              originalUrl,
+              shortUrl,
+              shortCode,
+              createdAt,
+              updatedAt
+            });
+
+            const responseData = {
+              originalUrl: originalUrl,
+              shortUrl: shortCode
+            };
+
+            await item.save();
+
+            return res.status(200).send(responseData);
+          }
+        } catch(err) {
+        res.status(401).send(err);
+        }
       }
     });
   } catch(err) {
