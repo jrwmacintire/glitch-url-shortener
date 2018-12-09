@@ -39,56 +39,40 @@ app.get('/', (req, res) => {
 
 // @route POST '/api/shorturl/new'
 // @desc Create a new shorturl using the POST request's query
-app.post('/api/shorturl/new', (req, res) => {
+app.post('/api/shorturl/new', async (req, res) => {
   const originalUrl = req.body.url;
   console.log(`originalUrl: ${originalUrl}`);
  
   const hostname = extractHostname(originalUrl);
   // console.log(`hostname: ${hostname}`);
   
+  const shortCode = shortid.generate(),
+        baseUrl = 'https://jrwm3-url-shortener.glitch.me/api/shorturl/',
+        shortUrl = baseUrl + shortCode,
+        createdAt = new Date(),
+        updatedAt = new Date();
+  
   try {
-    const dnsLookup = dns.lookup(hostname, async (err, address, family) => {
-      if(err) {
-        res.status(401).send({ error: '(dns.lookup) Invalid hostname format.' });
-      } else {
-        console.log('Valid hostname');
-        try {
-          const url = await UrlObject.findOne({ originalUrl: originalUrl });
-
-          if(url) {
-            return res.status(200).send({ message: 'Item in DB!' });
-          } else {
-            const createdAt = new Date(),
-                  baseUrl = 'https://jrwm3-url-shortener.glitch.me/api/shorturl/',
-                  shortCode = shortid.generate(),
-                  shortUrl = baseUrl + shortCode,
-                  updatedAt = new Date();
-
-            const item = new UrlObject({
-              originalUrl,
-              shortUrl,
-              shortCode,
-              createdAt,
-              updatedAt
-            });
-
-            const responseData = {
-              originalUrl: originalUrl,
-              shortUrl: shortCode
-            };
-
-            await item.save();
-
-            return res.status(200).send(responseData);
-          }
-        } catch(err) {
-        res.status(401).send(err);
-        }
-      }
-    });
-  } catch(err) {
-    res.status(401).send({ error: 'Invalid URL format.' });
+    
+    const url = await UrlObject.findOne({ originalUrl: originalUrl });
+    
+    const responseData = {
+      originalUrl: originalUrl,
+      shortUrl: shortCode
+    };
+    
+    if(url) {
+      console.log('item in DB');
+      return res.status(200).send({ message: 'item in DB.' });
+    } else {
+      console.log('item should be added to DB');
+      return res.status(200).send(responseData);
+    }
+    
+  } catch (err) {
+    return res.status(401).send({ error: 'Error finding item in DB.' });
   }
+  
 });
 
 // @route GET '/api/shorturl/:shortUrl'
