@@ -41,12 +41,12 @@ app.get('/', (req, res) => {
 app.post('/api/shorturl/new',(req, res) => {
   let body = req.body;
   // res.send(body);
-  const url = body.url;
+  const originalUrl = body.url;
   dns.lookup(url, async function(err, address, family) {
     if(err) {
       res.status(400).json({ error: 'Invalid URL' });
     } else {
-      // console.log(`address: ${address}`);
+      console.log(`address: ${address}`);
       const shortCode = shortid.generate(),
             baseUrl = 'https://jrwm3-url-shortener.glitch.me/api/shorturl/',
             shortUrl = baseUrl + shortCode,
@@ -55,12 +55,12 @@ app.post('/api/shorturl/new',(req, res) => {
       
       
       try {
-        const urlObject = await UrlObject.findOne({ originalUrl: url });
-        if(urlObject) {
+        const url = await UrlObject.findOne({ originalUrl: originalUrl });
+        if(url) {
           res.status(200).send({ message: 'Found in DB!' });
         } else {
           const item = new UrlObject({
-            url,
+            originalUrl,
             shortUrl,
             shortCode,
             createdAt,
@@ -68,7 +68,7 @@ app.post('/api/shorturl/new',(req, res) => {
           });
           
           const response = {
-            'originalUrl': url,
+            'originalUrl': originalUrl,
             'shortUrl': shortCode
           };
           
