@@ -45,7 +45,7 @@ app.post('/api/shorturl/new',(req, res) => {
   let body = req.body;
   // res.send(body);
   const url = body.url;
-  dns.lookup(url, function(err, address, family) {
+  dns.lookup(url, async function(err, address, family) {
     if(err) {
       res.status(400).json({ error: 'Invalid URL' });
     } else {
@@ -57,9 +57,9 @@ app.post('/api/shorturl/new',(req, res) => {
             updatedAt = new Date();
       
       try {
-        
+        const url = await UrlObject.findOne({ originalUrl: originalUrl });
       } catch(err) {
-         res.status(400).send({ 
+         res.status(400).send({ error: 'Error finding object in database.' }); 
       }
     }
   });
