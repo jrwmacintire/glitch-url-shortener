@@ -43,11 +43,16 @@ app.post('/api/shorturl/new',(req, res) => {
   // res.send(body);
   const originalUrl = body.url;
   console.log(`originalUrl: ${originalUrl}`);
+  
+  const urlRegExp = /^(https*:\/\/)(\w*)$/;
+  console.log(originalUrl.replace(urlRegExp, '$1 $2'));
+  
   const dnsLookup = dns.lookup(originalUrl, (err, address, family) => {
     if(err) {
       res.status(401).send({ error: 'Invalid URL format.' });
     } else {
       console.log('Valid URL?');
+      
       res.status(200).json({
         originalUrl: originalUrl,
         shortUrl: 'something short'
