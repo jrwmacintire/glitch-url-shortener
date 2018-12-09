@@ -63,7 +63,7 @@ app.post('/api/shorturl/new', async (req, res) => {
     
     if(url) {
       console.log('item in DB');
-      return res.status(200).send({ message: 'item in DB.' });
+      return res.status(200).send({ message: 'item found in DB.' });
     } else {
       console.log('item should be added to DB');
       return res.status(200).send(responseData);
