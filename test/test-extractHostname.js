@@ -12,7 +12,9 @@ describe('extractHostname.js', () => {
   it('returns error when URL lacks protocol', () => {
     const url = 'google.com';
     const result = extractHostname(url);
-    assert.equal(result, { error: 'invalid URL format.' });
+    assert.deepEqual(result, { error: 'invalid URL format.' });
   });
+  
+  
   
 });
