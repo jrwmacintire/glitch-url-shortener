@@ -45,9 +45,9 @@ app.post('/api/shorturl/new', (req, res) => {
   const originalUrl = body.url;
   console.log(`originalUrl: ${originalUrl}`);
  
-  extractHostname(originalUrl);
+  const hostname = extractHostname(originalUrl);
   
-  const dnsLookup = dns.lookup(originalUrl, (err, address, family) => {
+  const dnsLookup = dns.lookup(hostname, (err, address, family) => {
     if(err) {
       res.status(401).send({ error: 'Invalid hostname format.' });
     } else {
@@ -59,7 +59,7 @@ app.post('/api/shorturl/new', (req, res) => {
       });
     }
   });
-  console.log(`dnsLookup: `, dnsLookup);
+  // console.log(`dnsLookup: `, dnsLookup);
 });
 
 // @route GET '/api/shorturl/:shortUrl'
