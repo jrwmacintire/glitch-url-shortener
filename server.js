@@ -54,29 +54,14 @@ app.post('/api/shorturl/new', (req, res) => {
       } else {
         console.log('Valid hostname');
         
-        const url = new UrlObject.findOne({ originalUrl: originalUrl });
+        const exists = checkDatabase(originalUrl);
         
-        if(url) {
-          res.status(200).send({ message: 'URL exists in DB!' });
-        } else {
-          const shortCode = shortid.generate(),
-                baseUrl = 'https://jrwm3-url-shortener.glitch.me/api/shorturl/',
-                shortUrl = baseUrl + shortCode,
-                createdAt = new Date(),
-                updatedAt = new Date();
-          
-          const item = new UrlObject({
-            originalUrl,
-            shortUrl,
-            shortCode,
-            createdAt,
-            updatedAt
-          });
-          res.status(200).json({
-            originalUrl: originalUrl,
-            shortUrl: 'something short'
-          });
-        }
+        const responseData = {
+          originalUrl: originalUrl,
+          shortUrl: 'short placeholder'
+        };
+        
+        res.status(200).send(responseData);
       }
     });
   } catch(err) {
