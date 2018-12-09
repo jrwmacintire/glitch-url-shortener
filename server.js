@@ -55,6 +55,7 @@ app.post('/api/shorturl/new', (req, res) => {
         console.log('Valid hostname');
         
         const exists = checkDatabase(originalUrl);
+        console.log(exists);
         
         const responseData = {
           originalUrl: originalUrl,
