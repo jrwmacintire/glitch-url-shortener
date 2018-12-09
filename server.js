@@ -19,10 +19,13 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 /** this project needs a db !! **/ 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }, () => {
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }, (err, db) => {
   console.log('Connected to database!');
 });
 mongoose.Promise = global.Promise;
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.use(cors());
 
@@ -56,18 +59,25 @@ app.post('/api/shorturl/new', async (req, res) => {
     
     const url = await UrlObject.findOne({ originalUrl: originalUrl });
     
+    const item = new UrlObject({
+      originalUrl,
+      shortUrl,
+      shortCode,
+      createdAt,
+      updatedAt
+    });
+    
+    if(!url) {
+      console.log('adding item to DB');
+      await item.save();
+    }
+    
     const responseData = {
       originalUrl: originalUrl,
       shortUrl: shortCode
     };
     
-    if(url) {
-      console.log('item in DB');
-      return res.status(200).send({ message: 'item found in DB.' });
-    } else {
-      console.log('item should be added to DB');
-      return res.status(200).send(responseData);
-    }
+    return res.status(200).send(responseData);
     
   } catch (err) {
     return res.status(401).send({ error: 'Error finding item in DB.' });
