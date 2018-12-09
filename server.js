@@ -49,30 +49,28 @@ app.post('/api/shorturl/new',(req, res) => {
     if(err) {
       res.status(400).json({ error: 'Invalid URL' });
     } else {
-      console.log(`address: ${address}`);
+      // console.log(`address: ${address}`);
+      const shortCode = shortid.generate(),
+            baseUrl = 'https://jrwm3-url-shortener.glitch.me/api/shorturl/',
+            shortUrl = baseUrl + shortCode,
+            createdAt = new Date(),
+            updatedAt = new Date();
       
+      try {
+        
+      } catch(err) {
+         res.status(400).send({ 
+      }
     }
   });
 });
 
 // @route GET '/api/shorturl/:shortUrl'
 // @desc Redirects to the original URL associated with the current short URL
-app.get('/api/shorturl/:shortUrl', async (req, res) => {
-  console.log(`Redirecting from '${req.params.shortUrl}' to ...`);
+app.get('/api/shorturl/:shortUrl', (req, res) => {
   const shortUrl = req.params.shortUrl;
-  const url = await UrlObject.findOne({ shortUrl: shortUrl });
+  console.log(`Redirecting from '${shortUrl}' to ...`);
   
-  if(url) {
-    res.status(200).send({ message: 'Found in DB!' });
-  } else {
-    const item = new UrlObject({
-      originalUrl,
-      shortUrl,
-      shortCode,
-      createdAt,
-      updatedAt
-    }
-  }
 });
 
 
