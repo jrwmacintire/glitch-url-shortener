@@ -3,6 +3,8 @@
 const express = require('express');
 const mongo = require('mongodb');
 const mongoose = require('mongoose');
+require('./models/UrlObject');
+const UrlObject = mongoose.model('UrlObject');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const url = require('url');
@@ -55,8 +57,22 @@ app.post('/api/shorturl/new',(req, res) => {
 
 // @route GET '/api/shorturl/:shortUrl'
 // @desc Redirects to the original URL associated with the current short URL
-app.get('/api/shorturl/:shortUrl', (req, res) => {
+app.get('/api/shorturl/:shortUrl', async (req, res) => {
   console.log(`Redirecting from '${req.params.shortUrl}' to ...`);
+  const shortUrl = req.params.shortUrl;
+  const url = await UrlObject.findOne({ shortUrl: shortUrl });
+  
+  if(url) {
+    res.status(200).send({ message: 'Found in DB!' });
+  } else {
+    const item = new UrlObject({
+      originalUrl,
+      shortUrl,
+      shortCode,
+      createdAt,
+      updatedAt
+    }
+  }
 });
 
 
