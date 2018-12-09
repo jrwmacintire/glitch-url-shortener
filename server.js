@@ -40,12 +40,11 @@ app.get('/', (req, res) => {
 // @route POST '/api/shorturl/new'
 // @desc Create a new shorturl using the POST request's query
 app.post('/api/shorturl/new', (req, res) => {
-  let body = req.body;
-  // res.send(body);
-  const originalUrl = body.url;
+  const originalUrl = req.body.url;
   console.log(`originalUrl: ${originalUrl}`);
  
   const hostname = extractHostname(originalUrl);
+  // console.log(`hostname: ${hostname}`);
   
   const dnsLookup = dns.lookup(hostname, (err, address, family) => {
     if(err) {
