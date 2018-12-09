@@ -11,6 +11,7 @@ const url = require('url');
 const querystring = require('querystring');
 const shortid = require('shortid');
 const dns = require('dns');
+const extractHostname = require('./lib/extractHostname');
 
 const app = express();
 
@@ -38,20 +39,19 @@ app.get('/', (req, res) => {
 
 // @route POST '/api/shorturl/new'
 // @desc Create a new shorturl using the POST request's query
-app.post('/api/shorturl/new',(req, res) => {
+app.post('/api/shorturl/new', (req, res) => {
   let body = req.body;
   // res.send(body);
   const originalUrl = body.url;
   console.log(`originalUrl: ${originalUrl}`);
-  
-  const urlRegExp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
-  console.log(originalUrl.match(urlRegExp));
+ 
+  extractHostname(originalUrl);
   
   const dnsLookup = dns.lookup(originalUrl, (err, address, family) => {
     if(err) {
-      res.status(401).send({ error: 'Invalid URL format.' });
+      res.status(401).send({ error: 'Invalid hostname format.' });
     } else {
-      console.log('Valid URL?');
+      console.log('Valid hostname');
       
       res.status(200).json({
         originalUrl: originalUrl,
