@@ -15,10 +15,10 @@ const extractHostname = require('./lib/extractHostname');
 
 const app = express();
 
-// Basic Configuration 
+// Basic Configuration
 const port = process.env.PORT || 3000;
 
-/** this project needs a db !! **/ 
+/** this project needs a db !! **/
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }, (err, db) => {
   console.log('Connected to database!');
 });
@@ -45,19 +45,19 @@ app.get('/', (req, res) => {
 app.post('/api/shorturl/new', async (req, res) => {
   const originalUrl = req.body.url;
   console.log(`originalUrl: ${originalUrl}`);
- 
+
   const hostname = extractHostname(originalUrl);
   // console.log(`hostname: ${hostname}`);
-  
+
   const baseUrl = 'https://jrwm3-url-shortener.glitch.me/api/shorturl/',
         createdAt = new Date(),
         updatedAt = new Date();
-  
+
   let shortCode = shortid.generate(),
       shortUrl = baseUrl + shortCode;
-  
+
   try {
-    
+
     const url = await UrlObject.findOne({ originalUrl: originalUrl }, (err, obj) => {
       if(err) res.status(401).send(err);
       // If the object already exists, add object's shortCode
@@ -67,7 +67,7 @@ app.post('/api/shorturl/new', async (req, res) => {
         // console.log(shortUrl);
       }
     });
-    
+
     const item = new UrlObject({
       originalUrl,
       shortUrl,
@@ -75,21 +75,21 @@ app.post('/api/shorturl/new', async (req, res) => {
       createdAt,
       updatedAt
     });
-    
+
     if(!url) {
       console.log('adding item to DB');
       await item.save();
     }
-    
+
     return res.status(200).send({
       originalUrl: originalUrl,
       shortUrl: shortCode
     });
-    
+
   } catch (err) {
     return res.status(401).send({ error: 'Error finding item in DB.' });
   }
-  
+
 });
 
 // @route GET '/api/shorturl/:shortUrl'
@@ -97,13 +97,13 @@ app.post('/api/shorturl/new', async (req, res) => {
 app.get('/api/shorturl/:shortUrl', async (req, res) => {
   const shortUrl = req.params.shortUrl;
   console.log(`Redirecting from '${shortUrl}' to ...`);
-  
+
   const url = await UrlObject.findOne({ shortCode: shortUrl }, (err, obj) => {
     if(err) return res.status(401).send({ error: 'Error finding object in DB.' });
     // console.log(obj);
     return res.redirect(obj.originalUrl);
   });
-  
+
 });
 
 
