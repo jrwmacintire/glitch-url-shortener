@@ -49,12 +49,12 @@ app.post('/api/shorturl/new', async (req, res) => {
   const hostname = extractHostname(originalUrl);
   // console.log(`hostname: ${hostname}`);
   
-  const shortCode = shortid.generate(),
-        baseUrl = 'https://jrwm3-url-shortener.glitch.me/api/shorturl/',
+  const baseUrl = 'https://jrwm3-url-shortener.glitch.me/api/shorturl/',
         createdAt = new Date(),
         updatedAt = new Date();
   
-  let shortUrl = baseUrl + shortCode;
+  let shortCode = shortid.generate(),
+      shortUrl = baseUrl + shortCode;
   
   try {
     
@@ -62,7 +62,8 @@ app.post('/api/shorturl/new', async (req, res) => {
       if(err) res.status(401).send(err);
       // If the object already exists, add object's shortCode
       if(obj) {
-        shortUrl = baseUrl + obj.shortCode;
+        shortCode = obj.shortCode;
+        shortUrl = baseUrl + shortCode;
         // console.log(shortUrl);
       }
     });
@@ -82,7 +83,7 @@ app.post('/api/shorturl/new', async (req, res) => {
     
     return res.status(200).send({
       originalUrl: originalUrl,
-      shortUrl: shortUrl
+      shortUrl: shortCode
     });
     
   } catch (err) {
@@ -97,8 +98,11 @@ app.get('/api/shorturl/:shortUrl', async (req, res) => {
   const shortUrl = req.params.shortUrl;
   console.log(`Redirecting from '${shortUrl}' to ...`);
   
-  const url = await UrlObject.findOne({ shortUrl: shortUrl });
-  console.log(url);
+  const url = await UrlObject.findOne({ shortCode: shortUrl }, (err, obj) => {
+    if(err) return res.status(401).send({ error: 'Error finding object in DB.' });
+    // console.log(obj);
+    return res.redirect(obj.originalUrl);
+  });
   
 });
 
