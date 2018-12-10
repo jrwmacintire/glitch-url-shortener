@@ -51,18 +51,20 @@ app.post('/api/shorturl/new', async (req, res) => {
   
   const shortCode = shortid.generate(),
         baseUrl = 'https://jrwm3-url-shortener.glitch.me/api/shorturl/',
-        shortUrl = baseUrl + shortCode,
         createdAt = new Date(),
         updatedAt = new Date();
   
+  let shortUrl = baseUrl + shortCode;
+  
   try {
     
-    let shortUrl = shortCode;
     const url = await UrlObject.findOne({ originalUrl: originalUrl }, (err, obj) => {
       if(err) res.status(401).send(err);
       // If the object already exists, add object's shortCode
-      // if(obj.shortCode) shortUrl = obj.shortCode;
-      console.log(shortUrl);
+      if(obj) {
+        shortUrl = baseUrl + obj.shortCode;
+        // console.log(shortUrl);
+      }
     });
     
     const item = new UrlObject({
@@ -91,9 +93,12 @@ app.post('/api/shorturl/new', async (req, res) => {
 
 // @route GET '/api/shorturl/:shortUrl'
 // @desc Redirects to the original URL associated with the current short URL
-app.get('/api/shorturl/:shortUrl', (req, res) => {
+app.get('/api/shorturl/:shortUrl', async (req, res) => {
   const shortUrl = req.params.shortUrl;
   console.log(`Redirecting from '${shortUrl}' to ...`);
+  
+  const url = await UrlObject.findOne({ shortUrl: shortUrl });
+  console.log(url);
   
 });
 
